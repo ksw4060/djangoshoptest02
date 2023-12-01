@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import environ # django-environ
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'mydjangoshop.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": env("DATABASE_URL", default=f"sqlite:///{BASE_DIR/'db.sqlite3'}"),
+    "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR/'db.sqlite3'}"),
 }
 
 
@@ -143,3 +144,8 @@ MEDIA_ROOT = env.str("MEDIA_ROOT", default=BASE_DIR / "mediafiles")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INTERNAL_IPS = env.list("INTERNAL_IPS", default=["127.0.0.1"])
+
+# 포트원 결제
+PORTONE_SHOP_ID = env.str("PORTONE_SHOP_ID", default="")
+PORTONE_API_KEY = env.str("PORTONE_API_KEY", default="")
+PORTONE_API_SECRET = env.str("PORTONE_API_SECRET", default="")

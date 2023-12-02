@@ -1,8 +1,11 @@
+# Django
 from django.shortcuts import render, redirect, get_object_or_404
-from mall_test.models import Payment
-from mall_test.forms import PaymentForm
 from django.urls import reverse
 from django.conf import settings
+# local import
+from mall_test.models import Payment
+from mall_test.forms import PaymentForm
+
 
 # Create your views here.
 def payment_new(request):
@@ -29,13 +32,14 @@ def payment_pay(request, pk):
         "amount": payment.amount,
     }
     payment_check_url = reverse("payment_check", args=[payment.pk]) # URL Reverse
-    portone_shop_id = settings.PORTONE_SHOP_ID
+    portone_shop_id = settings.PORTONE_SHOP_ID # 포트원 상점 ID
 
     return render(
         request,
         'mall_test/payment_pay.html',
         {
-            "payment" : payment, # 뷰에서 URL Reverse를 사용하기 위해 Payment 객체를 넘겨줍니다.
+            "portone_shop_id": portone_shop_id,
+            "payment_check_url" : payment_check_url,
             "payment_props": payment_props, # 결제 정보를 넘겨줍니다.
         },
     )

@@ -146,6 +146,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = env.list("INTERNAL_IPS", default=["127.0.0.1"])
 
 # 포트원 결제
-PORTONE_SHOP_ID = env.str("PORTONE_SHOP_ID", default="")
-PORTONE_API_KEY = env.str("PORTONE_API_KEY", default="")
-PORTONE_API_SECRET = env.str("PORTONE_API_SECRET", default="")
+PORTONE_SHOP_ID = env.str("PORTONE_SHOP_ID")
+PORTONE_API_KEY = env.str("PORTONE_API_KEY")
+PORTONE_API_SECRET = env.str("PORTONE_API_SECRET")

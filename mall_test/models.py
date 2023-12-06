@@ -3,10 +3,15 @@ from uuid import uuid4
 from django.core.validators import MinValueValidator
 from iamport import Iamport
 from django.conf import settings
+from django.http import Http404
+import logging
+
+
+logger = logging.getLogger("portone")
 
 # Create your models here.
 class Payment(models.Model):
-    class StatusChices(models.TextChoices):
+    class StatusChoices(models.TextChoices):
         READY = "ready", "미결제"
         PAID = "paid", "결제완료"
         CANCELLED = "cancelled", "결제취소"
@@ -23,8 +28,8 @@ class Payment(models.Model):
     # ready, paid, cancelled, failed
     status = models.CharField(
         max_length=9,
-        default=StatusChices.READY,
-        choices=StatusChices.choices,
+        default=StatusChoices.READY,
+        choices=StatusChoices.choices,
         db_index=True,
         )
     is_paid_ok = models.BooleanField(default=False, db_index=True)
@@ -37,9 +42,12 @@ class Payment(models.Model):
     def portone_check(self, commit=True):
         api = Iamport(
             imp_key=settings.PORTONE_API_KEY, imp_secret=settings.PORTONE_API_SECRET
-            )
-        meta = api.find(merchant_uid=self.merchant_uid)
-
+        )
+        try:
+            meta = api.find(merchant_uid=self.merchant_uid)
+        except (Iamport.ResponseError, Iamport.HttpError) as e:
+            logger.error(str(e), exc_info=e)
+            raise Http404(str(e))
         self.status = meta["status"]
         self.is_paid_ok = meta["status"] == "paid" and meta["amount"] == self.amount
 

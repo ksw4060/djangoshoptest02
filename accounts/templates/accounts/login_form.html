@@ -1,10 +1,10 @@
 {% extends "accounts/base.html" %}
 {% load django_bootstrap5 %}
 {% block content %}
-    <h1>로그인</h1>
-    <form action="" method="post" novalidate>
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="submit" class="btn btn-primary" value="로그인" />
-    </form>
+<h1>로그인</h1>
+<form action="" method="post" novalidate>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" class="btn btn-primary" value="로그인" />
+</form>
 {% endblock %}

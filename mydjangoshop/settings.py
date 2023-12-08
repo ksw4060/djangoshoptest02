@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # 정적파일을 서빙할 때 사용
+    'django.contrib.humanize', # 숫자를 사람이 읽을 수 있는 형태로 변환
     # third apps
     'debug_toolbar',
     'django_bootstrap5',

@@ -28,7 +28,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"<Product {self.id}: {self.name}>"
+        return f"<{self.id}: {self.name}>"
     class Meta:
         verbose_name = verbose_name_plural = "상품"
-        ordering = ["-pk"]
+        ordering = ["pk"]

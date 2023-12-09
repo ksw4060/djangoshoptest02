@@ -1,6 +1,7 @@
 {% extends "mall/base.html" %}
 {% load humanize %}
 {% load thumbnail %}
+{% load django_bootstrap5 %}
 {% block content %}
     <div class="row">
         {% for product in product_list %}
@@ -28,4 +29,5 @@
             </div>
         {% endfor %}
     </div>
+    <div class="mt-3 mb-3">{% bootstrap_pagination page_obj %}</div>
 {% endblock %}

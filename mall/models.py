@@ -31,4 +31,4 @@ class Product(models.Model):
         return f"<{self.id}: {self.name}>"
     class Meta:
         verbose_name = verbose_name_plural = "상품"
-        ordering = ["pk"]
+        ordering = ["-pk"] # default는 -pk 이고, 다른 정렬을 원하면 views에서 order_by를 사용하면 됩니다.

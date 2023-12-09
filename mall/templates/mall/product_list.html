@@ -1,13 +1,16 @@
 {% extends "mall/base.html" %}
 {% load humanize %}
+{% load thumbnail %}
 {% block content %}
     <div class="row">
         {% for product in product_list %}
-            <div class="col-sm-6 col-lg-4">
+            <div class="col-sm-6 col-lg-4 p-2">
                 <div class="card">
-                    <img src="{{ product.photo.url }}"
-                         alt="상품 사진"
-                         class="card-img-top object-fit-cover">
+                    {% thumbnail product.photo "300x300" crop="center" as thumb %}
+                        <img src="{{ thumb.url }}"
+                             alt="{{ product.name }} 사진"
+                             class="card-img-top object-fit-cover">
+                    {% endthumbnail %}
                     <div class="card-body">
                         <p>번호 : {{ product.id }}</p>
                         <p>상품 종류 : {{ product.category }}</p>

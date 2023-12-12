@@ -1,4 +1,6 @@
 from django.db import models
+from accounts.models import User
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Category(models.Model):
@@ -32,3 +34,33 @@ class Product(models.Model):
     class Meta:
         verbose_name = verbose_name_plural = "상품"
         ordering = ["-pk"] # default는 -pk 이고, 다른 정렬을 원하면 views에서 order_by를 사용하면 됩니다.
+
+
+class CartProduct(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        db_constraint=False,
+        related_name="cart_product_set",
+        )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        db_constraint=False,
+        )
+    quantity = models.PositiveIntegerField(
+        default=1,
+        validators=[
+            MinValueValidator(1),
+        ],
+        )
+
+    def __str__(self):
+        return f"<{self.pk}> : {self.product.name} - {self.quantity}>"
+    class Meta:
+        verbose_name = verbose_name_plural = "장바구니 상품"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "product"],
+                name="unique_user_product",
+            ),
+        ]

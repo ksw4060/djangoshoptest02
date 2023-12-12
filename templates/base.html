@@ -9,6 +9,8 @@
     {% bootstrap_css %} {% bootstrap_javascript %}
   </head>
   <body>
+
+
     <header class="p-3 mb-3 border-bottom">
       <div class="container">
         <div
@@ -80,6 +82,9 @@
               aria-labelledby="dropdownUser1"
               style=""
             >
+              <li>
+                <a class="dropdown-item" href="{% url 'cart_detail' %}">장바구니</a>
+                </li>
               <li>
                 <a class="dropdown-item" href="{% url 'profile' %}">프로필</a>
               </li>

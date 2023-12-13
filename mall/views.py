@@ -6,6 +6,8 @@ from django.views.generic import ListView # django Pasination을 위해 ListView
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 # local import
 from .models import CartProduct, Product
 from .forms import CartProductForm
@@ -45,24 +47,27 @@ product_list = ProductListView.as_view()
 
 
 @login_required
+@require_POST
 def add_to_cart(request, product_pk):
     product_qs = Product.objects.filter(
-        status=Product.Status.ACTIVE
-        )
-    product = get_object_or_404(product_qs, pk=product_pk) # Active가 아닌 상품은 장바구니에 담을 수 없도록 합니다.
-    quantity = int(request.POST.get("quantity", 1)) # quantity가 없으면 1로 지정합니다.
+        status=Product.Status.ACTIVE,
+    )
+    product = get_object_or_404(product_qs, pk=product_pk)
+    quantity = int(request.GET.get("quantity", 1))
     cart_product, is_created = CartProduct.objects.get_or_create(
         user=request.user,
         product=product,
         defaults={"quantity": quantity},
     )
-    if not is_created: # 장바구니에 이미 담긴 상품일 경우, 추가로 담습니다.
+    if not is_created:
         cart_product.quantity += quantity
         cart_product.save()
 
-    messages.success(request, f"{product.name}을 장바구니에 담았습니다.")
-
-    return redirect("product_list")
+     # HTTP_REFERER는 이전 페이지의 URL을 가져옵니다. 브라우저의 기능입니다. HTTP_REFERER가 없으면 product_list를 보여줍니다 (23.12.13)
+    # redirect_url = request.META.get("HTTP_REFERER", "product_list")
+    # return redirect(redirect_url)
+    # <장바구니 담기는, POST 만 가능하기 때문에, redirect는 사용하지 않습니다. (23.12.13)>
+    return HttpResponse("장바구니에 담았습니다.")
 
 
 @login_required
@@ -75,6 +80,7 @@ def cart_detail(request):
     CartProductFormSet = modelformset_factory(
         model=CartProduct,
         form=CartProductForm,
+        extra=0, # 추가로 폼을 생성하지 않습니다.
         can_delete=True,
     )
 

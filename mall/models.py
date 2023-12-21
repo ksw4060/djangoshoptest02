@@ -4,8 +4,6 @@ from django.core.validators import MinValueValidator
 from uuid import uuid4
 import logging
 from typing import List
-from uuid import uuid4
-import logging
 
 from django.conf import settings
 from django.core.validators import MinValueValidator
@@ -177,13 +175,11 @@ class OrderedProduct(models.Model):
 class AbstractPortonePayment(models.Model):
     class PayMethod(models.TextChoices):
         CARD = "card", "신용카드"
-
     class PayStatus(models.TextChoices):
         READY = "ready", "결제 준비"
         PAID = "paid", "결제 완료"
         CANCELED = "canceled", "결제 취소"
         FAILED = "failed", "결제 실패"
-
     meta = models.JSONField("포트원 결제내역", default=dict, editable=False)
     uid = models.UUIDField("쇼핑몰 결제식별자", default=uuid4, editable=False)
     name = models.CharField("결제명", max_length=200)
@@ -200,18 +196,25 @@ class AbstractPortonePayment(models.Model):
         "결제성공 여부", default=False, db_index=True, editable=False
     )
 
+    @property
+    def merchant_uid(self) -> str:
+        return str(self.uid)
+
     @cached_property
     def api(self):
         return Iamport(
             imp_key=settings.PORTONE_API_KEY, imp_secret=settings.PORTONE_API_SECRET
         )
 
-    def update(self):
-        try:
-            self.meta = self.api.find(merchant_uid=self.uid)
-        except (Iamport.ResponseError, Iamport.HttpError) as e:
-            logger.error(str(e), exc_info=e)
-            raise Http404("포트원에서 결제내역을 찾을 수 없습니다.")
+    def update(self, response=None):
+        if response is None:
+            try:
+                self.meta = self.api.find(merchant_uid=self.merchant_uid)
+            except (Iamport.ResponseError, Iamport.HttpError) as e:
+                logger.error(str(e), exc_info=e)
+                raise Http404("포트원에서 결제내역을 찾을 수 없습니다.")
+        else:
+            self.meta = response
 
         self.pay_status = self.meta["status"]
         self.is_paid_ok = self.api.is_paid(self.desired_amount, response=self.meta)
@@ -223,15 +226,15 @@ class AbstractPortonePayment(models.Model):
     class Meta:
         abstract = True
 
-class OrderPayment(models.Model):
+class OrderPayment(AbstractPortonePayment):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, db_constraint=False)
 
     @classmethod
-    def create_by_order(cls, order:order) -> "OrderPayment":
+    def create_by_order(cls, order: Order) -> "OrderPayment":
         return cls.objects.create(
             order=order,
             name=order.name,
             desired_amount=order.total_amount,
-            buyer_name=order.user.get_full_name(),
+            buyer_name=order.user.get_full_name() or order.user.username,
             buyer_email=order.user.email,
         )

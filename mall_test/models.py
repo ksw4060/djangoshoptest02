@@ -30,7 +30,7 @@ class Payment(models.Model):
         max_length=9,
         default=StatusChoices.READY,
         choices=StatusChoices.choices,
-        db_index=True,
+        db_index=True, # db_index=True 는 DB에 인덱스를 생성. 조회 성능을 향상시킵니다.
         )
     is_paid_ok = models.BooleanField(default=False, db_index=True)
 

@@ -9,6 +9,7 @@ import logging
 
 logger = logging.getLogger("portone")
 
+
 # Create your models here.
 class Payment(models.Model):
     class StatusChoices(models.TextChoices):
@@ -17,21 +18,20 @@ class Payment(models.Model):
         CANCELLED = "cancelled", "결제취소"
         FAILED = "failed", "결제실패"
 
-
     uid = models.UUIDField(default=uuid4, editable=False)
     name = models.CharField(max_length=100)
     amount = models.PositiveIntegerField(
         validators=[
             MinValueValidator(1, message="1원 이상의 금액을 입력해주세요."),
-            ]
+        ]
     )
     # ready, paid, cancelled, failed
     status = models.CharField(
         max_length=9,
         default=StatusChoices.READY,
         choices=StatusChoices.choices,
-        db_index=True, # db_index=True 는 DB에 인덱스를 생성. 조회 성능을 향상시킵니다.
-        )
+        db_index=True,  # db_index=True 는 DB에 인덱스를 생성. 조회 성능을 향상시킵니다.
+    )
     is_paid_ok = models.BooleanField(default=False, db_index=True)
 
     @property

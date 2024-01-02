@@ -121,7 +121,6 @@ def order_new(request):
 @login_required
 def order_pay(request, pk):
     order = get_object_or_404(Order, pk=pk, user=request.user)
-    messages.warning(request, "구현 예정")
 
     if not order.can_pay():
         messages.error(request, "현재 결제를 할 수 없는 주문입니다.")

@@ -2,86 +2,73 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie-edge" />
-        <title>장고 쇼핑몰</title>
-        {% bootstrap_css %} {% bootstrap_javascript %}
-    </head>
-    <body>
-        <header class="p-3 mb-3 border-bottom">
-            <div class="container">
-                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                    <a href="{% url 'root' %}"
-                       class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">장고 쇼핑몰</a>
-                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <li>
-                            <a href="{% url 'product_list' %}" class="nav-link px-2 link-secondary">mall</a>
-                        </li>
-                    </ul>
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
-                          role="search"
-                          action=""
-                          method="get">
-                        <input type="search"
-                               class="form-control"
-                               placeholder="Search..."
-                               aria-label="Search"
-                               name="query"
-                               value="{{ request.GET.query }}" />
-                    </form>
-                    {% if not user.is_authenticated %}
-                        <ul class="nav">
-                            <li class="nav-item">
-                                <a href="{% url 'login' %}" class="nav-link link-dark px-2">로그인</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'signup' %}" class="nav-link link-dark px-2">회원가입</a>
-                            </li>
-                        </ul>
-                    {% else %}
-                        <div class="dropdown text-end">
-                            <a href="#"
-                               class="d-block link-dark text-decoration-none dropdown-toggle"
-                               id="dropdownUser1"
-                               data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                <img src="https://github.com/mdo.png"
-                                     alt="mdo"
-                                     width="32"
-                                     height="32"
-                                     class="rounded-circle" />
-                            </a>
-                            <ul class="dropdown-menu text-small"
-                                aria-labelledby="dropdownUser1"
-                                style="">
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'cart_detail' %}">장바구니</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'profile' %}">프로필</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'logout' %}">로그아웃</a>
-                                </li>
-                            </ul>
-                        </div>
-                    {% endif %}
-                </div>
+
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie-edge"/>
+    <title>장고 쇼핑몰</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+  </head>
+
+  <body>
+    <header class="p-3 mb-3 border-bottom">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="{% url 'root' %}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">장고 쇼핑몰</a>
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li>
+              <a href="{% url 'product_list' %}" class="nav-link px-2 link-secondary">mall</a>
+            </li>
+          </ul>
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" action="" method="get">
+            <input type="search" class="form-control" placeholder="Search..." aria-label="Search" name="query" value="{{ request.GET.query }}"/>
+          </form>
+          {% if not user.is_authenticated %}
+            <ul class="nav">
+              <li class="nav-item">
+                <a href="{% url 'login' %}" class="nav-link link-dark px-2">로그인</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'signup' %}" class="nav-link link-dark px-2">회원가입</a>
+              </li>
+            </ul>
+          {% else %}
+            <div class="dropdown text-end">
+              <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"/>
+              </a>
+              <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                <li>
+                  <a class="dropdown-item" href="{% url 'cart_detail' %}">장바구니</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'profile' %}">프로필</a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}">로그아웃</a>
+                </li>
+              </ul>
             </div>
-        </header>
-        <div class="container">
-            {% bootstrap_messages %}
-            {% block content %}{% endblock %}
-            <hr />
-            &copy; 2023. All rights reserved.
+          {% endif %}
         </div>
-        <script>window.csrf_token = "{{ csrf_token }}";</script>
-        <script src="{% static 'utils/alert-modal.js' %}"></script>
-        {% block extra-script %}{% endblock %}
-    </body>
+      </div>
+    </header>
+    <div class="container">
+      {% bootstrap_messages %}
+      {% block content %}{% endblock %}
+      <hr/>
+      &copy; 2023. All rights reserved.
+    </div>
+    <script>
+      window.csrf_token = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'utils/alert-modal.js' %}"></script>
+    {% block extra-script %}{% endblock %}
+  </body>
+
 </html>

@@ -9,7 +9,6 @@ class CartProductForm(forms.ModelForm):
             "quantity",
         ]
 
-
     """def clean_quantity(self):
         quantity = self.cleaned_data["quantity"]
         product = self.instance.product

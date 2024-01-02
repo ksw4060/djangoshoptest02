@@ -18,20 +18,20 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django.conf.urls.static import static # media 파일을 위한 import
+from django.conf.urls.static import static  # media 파일을 위한 import
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    path('mall/', include('mall.urls')),
-    path('mall_test/', include('mall_test.urls')),
+    path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    path("mall/", include("mall.urls")),
+    path("mall_test/", include("mall_test.urls")),
     path("", TemplateView.as_view(template_name="root.html"), name="root"),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('__debug__/', include('debug_toolbar.urls')),
+        path("__debug__/", include("debug_toolbar.urls")),
     ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # media 파일을 위한 설정은 장고에서 자체적으로 제공하지 않기 때문에

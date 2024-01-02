@@ -1,17 +1,16 @@
-from django.db import models
 from accounts.models import User
-from django.core.validators import MinValueValidator
-from uuid import uuid4
-import logging
-from typing import List
-
-from django.conf import settings
-from django.core.validators import MinValueValidator
+# django import
 from django.db import models
-from django.db.models import UniqueConstraint, QuerySet
+from django.core.validators import MinValueValidator
+from django.conf import settings
+from django.db.models import QuerySet
 from django.http import Http404
 from django.urls import reverse
 from django.utils.functional import cached_property
+# third party import
+from uuid import uuid4
+import logging
+from typing import List
 from iamport import Iamport
 
 logger = logging.getLogger(__name__)
@@ -114,6 +113,9 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self) -> str: # redirect를 위한 메서드
+        return reverse("order_detail", args=[self.pk])
 
     def can_pay(self) -> bool:
         return self.status in (self.Status.REQUESTED, self.Status.FAILED_PAYMENT)
